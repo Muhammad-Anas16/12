@@ -24,28 +24,45 @@ const addData = async () => { // Add Data Function
     }
 
     inp.value = "";
+
+    readData()
+    location.reload()
 }
 
 const readData = async () => { // Read Data Function
 
     const querySnapshot = await getDocs(collection(db, "todoData"));
     querySnapshot.forEach((doc) => {
-        let {todos} = doc.data()
-        console.log("ID => ", doc.id);
-        console.log("Data => ", todos);
-        let elm = `<div id ${doc.id}>${todos}</div>`;
-        dataBox.innerHTML += elm;
+        let { todos } = doc.data()
+        let elm = document.createElement("div");
+        elm.innerHTML = `${todos} <button id="${doc.id}">Del</button>`;
+        dataBox.appendChild(elm);
+        console.log(doc.id)
+    });
 
+    
+    const childArr = Array.from(dataBox.childNodes);
+
+    // Add event listeners to the "Del" buttons
+    childArr.forEach((child) => {
+        const button = child.querySelector('button'); // Get the button element
+        if (button) {
+            button.addEventListener('click', (event) => {console.log(event.target.id)});
+        }
     });
 
 }
 
 readData()
 
+let deleteData = () => {
+
+}
 
 // Get Elements
 
-const dataBox = document.getElementById("dataBox");
+var dataBox = document.getElementById("dataBox");
+// console.log("Date =>", Number(new Date().getTime().toString().slice(9) + Math.floor(Math.random() * 100 + 100)));
 
 const addBtn = document.getElementById("addBtn"); // Add Data Button
 addBtn.addEventListener("click", addData); // Add onClick Event
