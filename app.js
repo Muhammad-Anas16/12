@@ -37,6 +37,7 @@ const readData = async () => { // Read Data Function
     querySnapshot.forEach((doc) => {
         let { todos } = doc.data()
         let elm = document.createElement("div");
+        
         elm.innerHTML = `${todos} <button id="${doc.id}">Del</button>`;
         dataBox.appendChild(elm);
     });
