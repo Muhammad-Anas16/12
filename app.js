@@ -4,6 +4,8 @@ import {
     collection,
     addDoc,
     getDocs,
+    doc,
+    deleteDoc,
 
 } from "./firebase.js";
 
@@ -37,17 +39,15 @@ const readData = async () => { // Read Data Function
         let elm = document.createElement("div");
         elm.innerHTML = `${todos} <button id="${doc.id}">Del</button>`;
         dataBox.appendChild(elm);
-        console.log(doc.id)
     });
 
-    
-    const childArr = Array.from(dataBox.childNodes);
 
-    // Add event listeners to the "Del" buttons
-    childArr.forEach((child) => {
+    const arr = Array.from(dataBox.childNodes);
+    arr.forEach((child) => {
         const button = child.querySelector('button'); // Get the button element
         if (button) {
-            button.addEventListener('click', (event) => {console.log(event.target.id)});
+            // Add a click event listener to the button
+            button.addEventListener('click', deleteData);
         }
     });
 
@@ -55,14 +55,24 @@ const readData = async () => { // Read Data Function
 
 readData()
 
-let deleteData = () => {
+const deleteData = async (event) => {
+    // Access the clicked button using event.target
+    const button = event.target;
 
+    // Access the button's ID
+    const buttonId = button.id; // This is equivalent to your "doc.id"
+
+    console.log(buttonId); // Print the ID (or perform other operations with it)
+
+    await deleteDoc(doc(db, "todoData", buttonId));
+
+    readData();
+    location.reload()
 }
 
 // Get Elements
 
 var dataBox = document.getElementById("dataBox");
-// console.log("Date =>", Number(new Date().getTime().toString().slice(9) + Math.floor(Math.random() * 100 + 100)));
 
 const addBtn = document.getElementById("addBtn"); // Add Data Button
 addBtn.addEventListener("click", addData); // Add onClick Event
